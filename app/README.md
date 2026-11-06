@@ -29,4 +29,4 @@ any server and does not create, grant, extend, or restore any subscription.
 
 ---
 
-Made with ❤️ by ashkanthefirst.
+Made with ❤️ by AshkanTheFirst.

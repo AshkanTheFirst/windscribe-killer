@@ -76,7 +76,7 @@ and no .NET SDK required.
 
 ## Credits
 
-Made with ❤️ by **ashkanthefirst** - based on the open-source
+Made with ❤️ by **AshkanTheFirst** - based on the open-source
 *Account Record Cleaner* project (MIT).
 
 ## License

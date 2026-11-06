@@ -118,7 +118,7 @@ namespace ObligationKiller
 
             var credit = new Label
             {
-                Text = "made with \u2764 by ashkanthefirst",
+                Text = "made with \u2764 by AshkanTheFirst",
                 ForeColor = Color.DimGray,
                 Font = new Font("Segoe UI", 8.25F),
                 TextAlign = ContentAlignment.MiddleCenter,
