@@ -1,13 +1,13 @@
 <div align="center">
 
-# 🧹 ObligationKiller
+# 🪓 Windscribe Killer
 
 **One tap, and the Windscribe client forgets your machine ever saw an expired account.**
 
-The unofficial **Windscribe account-record cleaner** for Windows. A tiny,
-zero-install utility that removes the local record the Windscribe desktop
-client keeps about used-up free accounts — so the client treats your machine
-as brand new and lets you add another free account.
+**Windscribe Killer** is the unofficial **Windscribe account-record cleaner**
+for Windows. A tiny, zero-install utility that removes the local record the
+Windscribe desktop client keeps about used-up free accounts — so the client
+treats your machine as brand new and lets you add another free account.
 
 [![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078d6?logo=windows11&logoColor=white)](#-why-this-exists-the-windscribe-device-limit)
 [![Admin rights](https://img.shields.io/badge/admin%20rights-not%20required-2ea44f)](#-safety--reversibility)
@@ -63,7 +63,7 @@ That Windscribe record lives here:
 HKCU\Software\Microsoft\Windows\CurrentVersion\NetControlPort
 ```
 
-ObligationKiller removes exactly that key — with a backup, every single time —
+Windscribe Killer removes exactly that key — with a backup, every single time —
 and the Windscribe client starts fresh. Nothing else is touched.
 
 > [!IMPORTANT]
@@ -202,7 +202,7 @@ with <code>app\build.bat</code> using only what Windows already ships with.
 
 ## ⚖️ Fair play
 
-ObligationKiller is an independent tool and is **not affiliated with or
+Windscribe Killer is an independent tool and is **not affiliated with or
 endorsed by Windscribe**. It changes nothing on Windscribe's side. Whether and
 how you use it is your call — keep in mind it may conflict with Windscribe's
 Terms of Service, and your account remains subject to them.
@@ -232,4 +232,5 @@ Made with ❤️ by **AshkanTheFirst** — based on the open-source
 `windscribe` · `windscribe free account limit` · `windscribe device already used` ·
 `windscribe expired account` · `windscribe netcontrolport` ·
 `reset windscribe on this pc` · `windscribe registry cleaner` ·
-`windscribe account record cleaner` · `windscribe windows 10` · `windscribe windows 11`
+`windscribe account record cleaner` · `windscribe windows 10` · `windscribe windows 11` ·
+`windscribe killer` · `obligation killer` · `regdust`
