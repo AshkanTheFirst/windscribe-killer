@@ -4,21 +4,27 @@
 
 **One tap, and the Windscribe client forgets your machine ever saw an expired account.**
 
-A tiny, zero-install Windows utility that backs up and removes the local record
-the **Windscribe** desktop client keeps about used-up free accounts — so the
-client treats your machine as brand new again.
+The unofficial **Windscribe account-record cleaner** for Windows. A tiny,
+zero-install utility that removes the local record the Windscribe desktop
+client keeps about used-up free accounts — so the client treats your machine
+as brand new and lets you add another free account.
 
-[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078d6?logo=windows11&logoColor=white)](#-why-this-exists)
+[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078d6?logo=windows11&logoColor=white)](#-why-this-exists-the-windscribe-device-limit)
 [![Admin rights](https://img.shields.io/badge/admin%20rights-not%20required-2ea44f)](#-safety--reversibility)
 [![Dependencies](https://img.shields.io/badge/dependencies-zero-orange)](#-project-layout)
 [![EXE size](https://img.shields.io/badge/EXE-~18%20KB-8a2be2)](#-project-layout)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-[Why](#-why-this-exists) · [Features](#-features) · [Quick start](#-quick-start) · [CLI](#️-cli-usage) · [FAQ](#-faq)
+[Why](#-why-this-exists-the-windscribe-device-limit) · [Features](#-features) · [Quick start](#-quick-start) · [CLI](#️-cli-usage) · [FAQ](#-faq)
 
 </div>
 
----
+> [!TIP]
+> **Found this through a search?** You probably typed one of these:
+> *windscribe free account limit* · *windscribe already used on this device* ·
+> *windscribe expired account* · *windscribe netcontrolport* ·
+> *reset windscribe on this pc* · *windscribe registry cleaner* —
+> this tool is the fix, and it works in one tap.
 
 ```text
 ┌─────────────────────────────────────────────┐
@@ -42,50 +48,55 @@ client treats your machine as brand new again.
 
 *The whole app. Nothing to install, nothing to configure.*
 
-## 🤔 Why this exists
+## 🤔 Why this exists: the Windscribe device limit
 
-Windscribe's free plan is limited per **machine**, not just per account. When a
-free account runs out, the client doesn't simply forget it — it writes a small
-**encrypted record** into the registry that marks this machine as "already
-used". Signing up with a fresh account changes nothing: the client reads the
-record and blocks the machine, not the account.
+Windscribe's free plan is limited per **device**, not just per account. When a
+free account runs out, the Windscribe client doesn't simply forget it — it
+writes a small **encrypted record** into the Windows registry that marks this
+machine as "already used". From then on, signing up with a brand-new free
+account changes nothing: the client reads the record and blocks the **device**,
+not the account.
 
-That record lives here:
+That Windscribe record lives here:
 
 ```
 HKCU\Software\Microsoft\Windows\CurrentVersion\NetControlPort
 ```
 
 ObligationKiller removes exactly that key — with a backup, every single time —
-and the client starts fresh. Nothing else is touched.
+and the Windscribe client starts fresh. Nothing else is touched.
 
 > [!IMPORTANT]
-> **Local-only by design.** The tool never talks to any server, never modifies
-> any account, and cannot create, grant, extend, or restore a subscription. It
-> backs up and deletes one `HKCU` key. That's all it does.
+> **Local-only by design.** The tool never talks to Windscribe's servers, never
+> modifies any account, and cannot create, grant, extend, or restore any
+> Windscribe subscription. It backs up and deletes one `HKCU` key. That's all
+> it does.
 
 ## ✨ Features
 
-- **One-tap GUI** — no installer, no admin rights, no PowerShell policy prompts
+- **One-tap Windscribe cleanup** — no installer, no admin rights, no PowerShell
+  policy prompts
 - **Live status dot** — 🟢 clean / 🔴 record present, refreshed every 3 seconds
 - **Backup-first** — exports a timestamped `.reg` backup before every delete;
   if the backup fails, nothing is deleted
 - **One-click restore** — any backup can be restored from the dropdown, or by
   double-clicking the `.reg` file
-- **Client-aware** — optionally closes `Windscribe.exe` before cleaning and
-  relaunches it afterwards (finds it in standard paths, uninstall entries, or
-  via file picker)
+- **Windscribe-client-aware** — optionally closes `Windscribe.exe` before
+  cleaning and relaunches it afterwards (finds it in standard paths like
+  `Program Files\Windscribe` and `Windscribe2`, uninstall entries, or via file
+  picker)
 - **Two flavors** — a GUI (`app/ObligationKiller.exe`) and a CLI script
   (`clear-account-record.ps1`) with the same behavior
 
-The flow is always: **close client *(optional)* → export backup → delete key → relaunch client *(optional)***.
+The flow is always: **close Windscribe *(optional)* → export backup → delete the record → relaunch Windscribe *(optional)***.
 
 ## 🚀 Quick start
 
 1. Double-click `app\ObligationKiller.exe`.
-2. The status dot tells you where you stand: 🔴 = a record is present.
+2. The status dot tells you where you stand: 🔴 = Windscribe has a record
+   about this machine.
 3. Tap **KILL THE OBLIGATION** — the key is backed up to `app\backups\` and removed.
-4. Start Windscribe and continue with the account of your choice.
+4. Start Windscribe and add another free account.
 
 That's it. The EXE is a single ~18 KB WinForms binary built against the
 .NET Framework that already ships with Windows 10 and 11 — no runtime to
@@ -138,25 +149,33 @@ It compiles `app\ObligationKiller.cs` with the in-box compiler
   delete never happens.**
 - Restore anytime: double-click a backup file, or pick it in the app and hit
   **Restore**.
-- The client recreates the key on its own in some situations — that's normal.
-  The status dot tells you when it's back; run the tool again.
+- The Windscribe client recreates the key on its own in some situations —
+  that's normal. The status dot tells you when it's back; run the tool again.
 
 ## ❓ FAQ
 
 <details>
-<summary><b>Is this a crack, keygen, or account generator?</b></summary>
+<summary><b>Windscribe says the free plan was already used on this device — does this fix that?</b></summary>
+
+Yes, that's exactly what this tool is for. That block comes from the local
+`NetControlPort` registry record, not from your account. Removing the record
+makes the Windscribe client treat the machine as fresh.
+</details>
+
+<details>
+<summary><b>Is this a Windscribe crack, keygen, or premium-account generator?</b></summary>
 
 No. It's a registry cleaner for one specific key. It cannot touch Windscribe's
-servers, your account, or anyone else's — it only changes what the client
-*remembers locally* about this machine.
+servers, your account, or anyone else's — it only changes what the Windscribe
+client <i>remembers locally</i> about this machine.
 </details>
 
 <details>
 <summary><b>Why does the record come back?</b></summary>
 
-The client recreates the key by itself when it sees an expired account again.
-That's expected — just run the tool again. The status dot shows the current
-state at all times.
+The Windscribe client recreates the key by itself when it sees an expired
+account again. That's expected — just run the tool again. The status dot shows
+the current state at all times.
 </details>
 
 <details>
@@ -171,7 +190,7 @@ to avoid that.
 <summary><b>Is it portable?</b></summary>
 
 Fully. One `.exe` with no dependencies, no installation, no registry entries of
-its own. Run it from anywhere.
+its own. Run it from anywhere — including a USB stick.
 </details>
 
 <details>
@@ -207,3 +226,10 @@ Made with ❤️ by **AshkanTheFirst** — based on the open-source
 ## License
 
 [MIT](LICENSE) — do whatever, just keep the notice.
+
+## 🔎 Keywords
+
+`windscribe` · `windscribe free account limit` · `windscribe device already used` ·
+`windscribe expired account` · `windscribe netcontrolport` ·
+`reset windscribe on this pc` · `windscribe registry cleaner` ·
+`windscribe account record cleaner` · `windscribe windows 10` · `windscribe windows 11`
