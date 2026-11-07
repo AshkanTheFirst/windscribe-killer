@@ -1,84 +1,209 @@
-# regdust
+<div align="center">
 
-A tiny Windows housekeeping utility. It backs up and removes one registry key
-under `HKCU` that the **Windscribe** desktop client writes on the machine:
+# 🧹 ObligationKiller
+
+**One tap, and the Windscribe client forgets your machine ever saw an expired account.**
+
+A tiny, zero-install Windows utility that backs up and removes the local record
+the **Windscribe** desktop client keeps about used-up free accounts — so the
+client treats your machine as brand new again.
+
+[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-0078d6?logo=windows11&logoColor=white)](#-why-this-exists)
+[![Admin rights](https://img.shields.io/badge/admin%20rights-not%20required-2ea44f)](#-safety--reversibility)
+[![Dependencies](https://img.shields.io/badge/dependencies-zero-orange)](#-project-layout)
+[![EXE size](https://img.shields.io/badge/EXE-~18%20KB-8a2be2)](#-project-layout)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+[Why](#-why-this-exists) · [Features](#-features) · [Quick start](#-quick-start) · [CLI](#️-cli-usage) · [FAQ](#-faq)
+
+</div>
+
+---
+
+```text
+┌─────────────────────────────────────────────┐
+│  Windscribe Obligation Killer               │
+│                                             │
+│  ● Record PRESENT — your account is used up │
+│                                             │
+│  [x] Close Windscribe client first          │
+│  [ ] Open Windscribe automatically after    │
+│                                             │
+│  ╔═══════════════════════════════════════╗  │
+│  ║        KILL THE OBLIGATION            ║  │
+│  ╚═══════════════════════════════════════╝  │
+│                                             │
+│  Backups  netcontrolport-20261106-235924.reg│
+│           [ Restore ]   [ Folder ]          │
+│                                             │
+│  log  record deleted. run Windscribe now    │
+└─────────────────────────────────────────────┘
+```
+
+*The whole app. Nothing to install, nothing to configure.*
+
+## 🤔 Why this exists
+
+Windscribe's free plan is limited per **machine**, not just per account. When a
+free account runs out, the client doesn't simply forget it — it writes a small
+**encrypted record** into the registry that marks this machine as "already
+used". Signing up with a fresh account changes nothing: the client reads the
+record and blocks the machine, not the account.
+
+That record lives here:
 
 ```
 HKCU\Software\Microsoft\Windows\CurrentVersion\NetControlPort
 ```
 
-After the key is removed, the client keeps no local bookkeeping about accounts
-it has seen on this machine and starts fresh. The client may recreate the key
-on its own at any time.
+ObligationKiller removes exactly that key — with a backup, every single time —
+and the client starts fresh. Nothing else is touched.
 
 > [!IMPORTANT]
-> regdust is a **local-only** tool. It never talks to any server, it does not
-> modify any account, and it does not create, grant, extend, or restore any
-> subscription. It only backs up and deletes that one `HKCU` key.
+> **Local-only by design.** The tool never talks to any server, never modifies
+> any account, and cannot create, grant, extend, or restore a subscription. It
+> backs up and deletes one `HKCU` key. That's all it does.
 
-## What's inside
+## ✨ Features
 
-| File | What it is |
-|------|------------|
-| `app/ObligationKiller.exe` | One-tap GUI - no install, no admin rights |
-| `app/ObligationKiller.cs` | GUI source (C#, builds with the compiler built into Windows) |
-| `clear-account-record.ps1` | Original PowerShell version |
-| `clear-account-record.bat` | Double-click launcher for the script |
+- **One-tap GUI** — no installer, no admin rights, no PowerShell policy prompts
+- **Live status dot** — 🟢 clean / 🔴 record present, refreshed every 3 seconds
+- **Backup-first** — exports a timestamped `.reg` backup before every delete;
+  if the backup fails, nothing is deleted
+- **One-click restore** — any backup can be restored from the dropdown, or by
+  double-clicking the `.reg` file
+- **Client-aware** — optionally closes `Windscribe.exe` before cleaning and
+  relaunches it afterwards (finds it in standard paths, uninstall entries, or
+  via file picker)
+- **Two flavors** — a GUI (`app/ObligationKiller.exe`) and a CLI script
+  (`clear-account-record.ps1`) with the same behavior
 
-## Usage
+The flow is always: **close client *(optional)* → export backup → delete key → relaunch client *(optional)***.
 
-### GUI (recommended)
+## 🚀 Quick start
 
-Double-click `app\ObligationKiller.exe`:
+1. Double-click `app\ObligationKiller.exe`.
+2. The status dot tells you where you stand: 🔴 = a record is present.
+3. Tap **KILL THE OBLIGATION** — the key is backed up to `app\backups\` and removed.
+4. Start Windscribe and continue with the account of your choice.
 
-1. The status dot shows whether the key is currently present (green = clean).
-2. Tap the big red button - the key is backed up to `app\backups\` and removed.
-3. Start the client and continue with the account of your choice.
+That's it. The EXE is a single ~18 KB WinForms binary built against the
+.NET Framework that already ships with Windows 10 and 11 — no runtime to
+install, no admin prompt, and it works from any folder (e.g. a USB stick).
 
-Any backup can be restored later from the dropdown inside the app.
+## ️⌨️ CLI usage
 
-### PowerShell script
+Prefer the terminal, or want to automate it? Use `clear-account-record.ps1`:
 
 ```powershell
-# default - backup, then remove
-.\clear-account-record.ps1
-
-# close the client first so the key is not rewritten right away
-.\clear-account-record.ps1 -KillClient
-
-# without a backup
-.\clear-account-record.ps1 -NoBackup
-
-# custom backup folder
+.\clear-account-record.ps1                # backup, then remove
+.\clear-account-record.ps1 -KillClient    # close the Windscribe client first
+.\clear-account-record.ps1 -NoBackup      # skip the backup (not recommended)
 .\clear-account-record.ps1 -BackupDir D:\backups
 ```
 
-or double-click `clear-account-record.bat` - it runs the script with
-`-ExecutionPolicy Bypass` and UTF-8 output; arguments work there too:
+| Parameter | Effect |
+|-----------|--------|
+| *(none)* | Export a timestamped `.reg` backup to `backups\`, then delete the key |
+| `-KillClient` | Stop running `Windscribe.exe` processes first, so the key isn't rewritten right away |
+| `-NoBackup` | Delete without exporting a backup |
+| `-BackupDir <path>` | Store backups in a custom folder |
+
+No patience for execution policies? Double-click `clear-account-record.bat` —
+it runs the script with `-ExecutionPolicy Bypass` and UTF-8 output, and
+forwards any arguments:
 
 ```
 clear-account-record.bat -KillClient
 ```
 
-### Building the GUI from source
+## 🛠️ Building from source
 
-Double-click `app\build.bat` - it uses the C# compiler that ships with Windows
-(`%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe`). No Visual Studio
-and no .NET SDK required.
+No Visual Studio, no .NET SDK — the C# compiler ships with Windows itself.
+Just double-click:
 
-## Notes
+```
+app\build.bat
+```
 
-- Everything happens under `HKCU`; admin rights are not required.
-- Removing the key is reversible - double-click any `.reg` backup (or use the
-  **Restore** button in the app) to put it back.
-- The client recreates the key by itself in some situations; that is normal
-  and this tool can simply be run again.
+It compiles `app\ObligationKiller.cs` with the in-box compiler
+(`%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\csc.exe`) and refreshes
+`ObligationKiller.exe` in place. Five seconds, zero setup.
+
+## 🔒 Safety & reversibility
+
+- Everything happens under `HKCU` — the current user's own registry area — so
+  **admin rights are never required**.
+- Every delete is preceded by a timestamped `.reg` export. **Backup failed →
+  delete never happens.**
+- Restore anytime: double-click a backup file, or pick it in the app and hit
+  **Restore**.
+- The client recreates the key on its own in some situations — that's normal.
+  The status dot tells you when it's back; run the tool again.
+
+## ❓ FAQ
+
+<details>
+<summary><b>Is this a crack, keygen, or account generator?</b></summary>
+
+No. It's a registry cleaner for one specific key. It cannot touch Windscribe's
+servers, your account, or anyone else's — it only changes what the client
+*remembers locally* about this machine.
+</details>
+
+<details>
+<summary><b>Why does the record come back?</b></summary>
+
+The client recreates the key by itself when it sees an expired account again.
+That's expected — just run the tool again. The status dot shows the current
+state at all times.
+</details>
+
+<details>
+<summary><b>Does it work while Windscribe is running?</b></summary>
+
+Yes, but the client may rewrite the key immediately after cleaning. Tick
+<b>Close Windscribe client first</b> in the GUI (or use <code>-KillClient</code>)
+to avoid that.
+</details>
+
+<details>
+<summary><b>Is it portable?</b></summary>
+
+Fully. One `.exe` with no dependencies, no installation, no registry entries of
+its own. Run it from anywhere.
+</details>
+
+<details>
+<summary><b>Why should I trust the binary?</b></summary>
+
+You don't have to. The full source is in this repo and builds in five seconds
+with <code>app\build.bat</code> using only what Windows already ships with.
+</details>
+
+## ⚖️ Fair play
+
+ObligationKiller is an independent tool and is **not affiliated with or
+endorsed by Windscribe**. It changes nothing on Windscribe's side. Whether and
+how you use it is your call — keep in mind it may conflict with Windscribe's
+Terms of Service, and your account remains subject to them.
+
+## 🧩 Project layout
+
+| Path | What it is |
+|------|------------|
+| `app/ObligationKiller.exe` | One-tap GUI — a single ~18 KB WinForms executable |
+| `app/ObligationKiller.cs` | GUI source (C#, WinForms) |
+| `app/build.bat` | Rebuilds the EXE with the compiler built into Windows |
+| `clear-account-record.ps1` | The original PowerShell version |
+| `clear-account-record.bat` | Double-click launcher for the script |
+| `backups/` | Timestamped `.reg` backups land here |
 
 ## Credits
 
-Made with ❤️ by **AshkanTheFirst** - based on the open-source
+Made with ❤️ by **AshkanTheFirst** — based on the open-source
 *Account Record Cleaner* project (MIT).
 
 ## License
 
-MIT - see [LICENSE](LICENSE).
+[MIT](LICENSE) — do whatever, just keep the notice.
